@@ -1,23 +1,58 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import ToolSprite from './ToolSprite';
+import { tools } from './content';
 import './styles.css';
-import { guides, devices, journalismElements } from './content';
 
-const tools = [
-  {id:'audience', title:'Audience', hint:'Know who’s listening.'},
-  {id:'purpose', title:'Purpose', hint:'Find your direction.'},
-  {id:'words', title:'Word Choice', hint:'Make every word count.'},
-  {id:'show', title:'Show vs. Tell', hint:'Bring the moment to life.'},
-  {id:'devices', title:'Literary Devices', hint:'Give your words depth.'},
-  {id:'journalism', title:'The Elements of Journalism', hint:'Tell the story. Get it right.'},
-];
-function Header(){return <header className="header"><div className="eyebrow"><span className="mark">W.</span> WRITER’S FIELD GUIDE</div><span className="edition">SIX TOOLS. ENDLESS POSSIBILITIES.</span></header>}
-function ToolItem({tool,index,onSelect}){return <button className={`tool tool-${tool.id}`} onClick={()=>onSelect(tool.id)}><span className="object"><ToolSprite type={tool.id}/></span><span className="tool-label"><span className="number">0{index+1}</span><span className="tool-name">{tool.title}</span><span className="open-arrow" aria-hidden="true">↗</span></span><span className="tool-hint">{tool.hint}</span></button>}
-function Toolbox({onSelect}) {return <><section className="intro"><div><div className="small-caption">GOOD WRITING IS A CRAFT.</div><h1>THE WRITER’S<br/>TOOLBOX<span className="title-period">.</span></h1></div><p>An interactive guide to the tools writers use to shape ideas, communicate clearly, and create effective writing.</p></section><section className="workbench" aria-label="Six writing tools"><div className="bench-top"><span>YOUR WORKBENCH</span><span>Pick a tool. Build a better sentence.</span></div><div className="tool-grid">{tools.map((tool,index)=><ToolItem key={tool.id} {...{tool,index,onSelect}}/>)}</div><div className="bench-bottom"><span>A FEW GOOD TOOLS GO A LONG WAY.</span><span className="bench-line"/><span>01 — 06</span></div></section><footer><span>Made for the practice of writing.</span><span>Keep this guide close. Make it your own.</span></footer></>}
-function GuideSection({title,children}){return <section className="guide-section"><h2>{title}</h2><p>{children}</p></section>}
-function LiteraryDeviceList(){return <section className="device-list"><div className="section-kicker">A CLOSER LOOK</div><h2>Seven ways to shape meaning.</h2>{devices.map(([name,definition,example,why],i)=><details key={name}><summary><span className="number">0{i+1}</span><span>{name}</span><span className="expand-symbol" aria-hidden="true"/></summary><div className="device-content"><p>{definition}</p><blockquote>{example}</blockquote><p className="device-why">{why}</p></div></details>)}</section>}
-function Journalism(){return <section className="news-section"><div className="news-masthead"><span>THE REPORTER’S NOTEBOOK</span><span>FACTS FIRST.</span></div><h2>A story readers can trust.</h2><div className="news-columns"><div>{journalismElements.map(([title,copy])=><section className="news-element" key={title}><h3>{title}</h3><p>{copy}</p></section>)}</div><figure className="pyramid"><figcaption>THE INVERTED PYRAMID</figcaption><div className="pyramid-shape">{['Most important information','Important details','Background / context','Less essential details'].map((label,i)=><React.Fragment key={label}><div className={`pyramid-level level-${i}`}>{label}</div>{i<3&&<span aria-hidden="true">↓</span>}</React.Fragment>)}</div><p>Lead with what matters most.<br/>Add depth as the story continues.</p></figure></div></section>}
-function GuideView({tool,onBack}){const data=guides[tool.id];const heading=useRef(null);useEffect(()=>{heading.current?.focus();window.scrollTo(0,0)},[tool.id]);return <article className={`guide guide-${tool.id}`}><button className="back-button" onClick={onBack}>← <span>Back to Toolbox</span></button><div className="guide-header"><div><div className="section-kicker">TOOL 0{tools.indexOf(tool)+1} / 06</div><h1 ref={heading} tabIndex={-1}>{tool.title}</h1><p>{data.subtitle}</p></div><div className="guide-object"><ToolSprite type={tool.id}/></div></div><div className="guide-body"><div className="guide-explanation"><GuideSection title="What is it?">{data.what}</GuideSection><GuideSection title="How does it work?">{data.how}</GuideSection><GuideSection title="When and why should writers use it?">{data.when}</GuideSection></div><aside className="example"><span className="section-kicker">IN PRACTICE</span><h2>{tool.id === 'journalism' ? <>The story, in<br/>one sentence.</> : <>A small change.<br/>A different effect.</>}</h2>{data.examples.map(([label,quote])=><div className="example-item" key={label}><h3>{label}</h3><blockquote>{quote}</blockquote></div>)}<p className="takeaway">{data.takeaway}</p></aside></div>{tool.id==='devices'&&<LiteraryDeviceList/>}{tool.id==='journalism'&&<Journalism/>}<div className="field-note"><span className="section-kicker">KEEP IN MIND</span><p>{data.prompt}</p></div><div className="guide-end"><button className="back-button" onClick={onBack}>← <span>Back to Toolbox</span></button><span>ONE TOOL. A MORE INTENTIONAL DRAFT.</span></div></article>}
-function App(){const [selected,setSelected]=useState(null);const previous=useRef(null);const scrollPosition=useRef(0);function select(id){previous.current=document.activeElement;scrollPosition.current=window.scrollY;setSelected(id)}function back(){setSelected(null);requestAnimationFrame(()=>{window.scrollTo(0,scrollPosition.current);document.querySelector(`.tool-${selected}`)?.focus({preventScroll:true})})}useEffect(()=>{function escape(event){if(event.key==='Escape'&&selected)back()}window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[selected]);return <div className="site"><Header/><main>{selected?<GuideView key={selected} tool={tools.find(t=>t.id===selected)} onBack={back}/>:<Toolbox onSelect={select}/>}</main></div>}
+function Bench() {
+  return <svg className="bench-illustration" viewBox="0 0 1100 650" preserveAspectRatio="none" fill="none" aria-hidden="true">
+    <defs>
+      <clipPath id="bench-surface"><path d="M99 45h902l49 347H50Z"/></clipPath>
+      <linearGradient id="wood-top" x1="550" y1="25" x2="550" y2="420" gradientUnits="userSpaceOnUse"><stop stopColor="#dbccb2"/><stop offset="1" stopColor="#cbbb9e"/></linearGradient>
+      <linearGradient id="wood-front" x2="0" y2="1"><stop stopColor="#bba483"/><stop offset="1" stopColor="#aa9070"/></linearGradient>
+      <filter id="wood-grain"><feTurbulence type="fractalNoise" baseFrequency=".014 .55" numOctaves="2" seed="8"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".055"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+    </defs>
+    <ellipse cx="550" cy="612" rx="447" ry="21" fill="#786853" opacity=".09"/>
+    <path d="M154 396h45l-9 190-41 3Z" fill="#a58d6d" stroke="#88765d" strokeWidth="1.5"/>
+    <path d="M905 396h43l7 193-40-3Z" fill="#aa9272" stroke="#88765d" strokeWidth="1.5"/>
+    <path d="M160 526h780v25H160Z" fill="#a88f70" stroke="#88765d" strokeWidth="1.5"/>
+    <path d="m171 526 45-28h670l52 28Z" fill="#c4ae8d" stroke="#9e8768" strokeWidth="1.5"/>
+    <path d="M109 393h49l-18 212-45 4Z" fill="#bda17c" stroke="#8d775a" strokeWidth="1.5"/>
+    <path d="m158 393 15-8-17 213-16 7Z" fill="#9e8462"/>
+    <path d="M942 393h49l14 216-45-4Z" fill="#bda17c" stroke="#8d775a" strokeWidth="1.5"/>
+    <path d="m942 393-15-8 16 213 17 7Z" fill="#9e8462"/>
+    <path d="M119 388h862v82H119Z" fill="url(#wood-front)" stroke="#90795c" strokeWidth="1.5"/>
+    <path d="M185 412h342v43H185Zm389 0h342v43H574Z" fill="#c1aa88" stroke="#9b8160" strokeWidth="1.5"/>
+    <path d="M328 432h56m335 0h56" stroke="#6d6555" strokeWidth="5" strokeLinecap="round"/>
+    <path d="M99 45h902l49 347H50Z" fill="url(#wood-top)" stroke="#aa9576" strokeWidth="2" filter="url(#wood-grain)" clipPath="url(#bench-surface)"/>
+    <path d="M50 392h1000v24H50Z" fill="#b19a78" stroke="#917a59" strokeWidth="1.5"/>
+    <path d="M53 394h994" stroke="#e4d5b9" strokeWidth="2"/>
+    <g stroke="#a28a66" opacity=".28" strokeWidth="1.2"><path d="M85 145h931M71 262h959"/><path d="M111 79c145-5 204 5 356 0s308-3 517 1M105 92c180-3 243 2 356 0M87 212c87-4 136 5 225 1m362 13c86-5 186 5 348-1M77 333c127-4 237 4 359 0m46 26c121-3 310 4 551-1"/></g>
+    <g fill="#8d785b" opacity=".5"><circle cx="109" cy="60" r="2"/><circle cx="991" cy="60" r="2"/><circle cx="66" cy="377" r="2"/><circle cx="1034" cy="377" r="2"/></g>
+  </svg>;
+}
+function Toolbox({onSelect}) {
+  return <section className="toolbox"><h1>THE WRITER’S TOOLBOX</h1><div className="workbench"><Bench/><div className="tool-grid" aria-label="Writing tools">{tools.map(tool=><button key={tool.id} className={`tool tool-${tool.id}`} onClick={()=>onSelect(tool.id)}><span className="object"><ToolSprite type={tool.id}/></span><span className="tool-label">{tool.title}</span></button>)}</div></div></section>;
+}
+function GuideView({tool,onBack}) {
+  const heading=useRef(null);
+  useEffect(()=>{heading.current?.focus();window.scrollTo(0,0)},[tool.id]);
+  return <article className="guide">
+    <button className="back-button" onClick={onBack}>← Back to Toolbox</button>
+    <div className="guide-heading"><h1 ref={heading} tabIndex={-1}>{tool.title}</h1><div className="guide-object"><ToolSprite type={tool.id}/></div></div>
+    <p className="definition">{tool.description}</p>
+    <ul className="guide-points">{tool.points.map(([label,text])=><li key={label}><strong>{label}</strong> {text}</li>)}</ul>
+    {tool.devices&&<details className="device-reference"><summary>Seven common devices <span aria-hidden="true">+</span></summary><dl>{tool.devices.map(([name,meaning])=><div key={name}><dt>{name}</dt><dd>{meaning}</dd></div>)}</dl></details>}
+    {tool.id==='journalism'&&<figure className="pyramid"><figcaption>Inverted pyramid</figcaption><div>Essential facts</div><div>Supporting details</div><div>Background</div></figure>}
+    <section className="example"><h2>Example</h2>{tool.example.map(([label,text])=><div className="example-line" key={label}><h3>{label}</h3><blockquote>{text}</blockquote></div>)}<p>{tool.note}</p></section>
+  </article>;
+}
+function App(){
+  const [selected,setSelected]=useState(null);
+  const scrollPosition=useRef(0);
+  function select(id){scrollPosition.current=window.scrollY;setSelected(id)}
+  function back(){setSelected(null);requestAnimationFrame(()=>{window.scrollTo(0,scrollPosition.current);document.querySelector(`.tool-${selected}`)?.focus({preventScroll:true})})}
+  useEffect(()=>{function escape(event){if(event.key==='Escape'&&selected)back()}window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape)},[selected]);
+  return <main>{selected?<GuideView tool={tools.find(tool=>tool.id===selected)} onBack={back}/>:<Toolbox onSelect={select}/>}</main>;
+}
 createRoot(document.getElementById('root')).render(<App/>);
