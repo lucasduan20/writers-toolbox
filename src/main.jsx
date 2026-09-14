@@ -15,7 +15,7 @@ function GuideView({tool,onBack}) {
     <button className="back-button" onClick={onBack}>← Back to Toolbox</button>
     <div className="guide-heading"><h1 ref={heading} tabIndex={-1}>{tool.title}</h1><div className="guide-object"><ToolSprite type={tool.id}/></div></div>
     <p className="definition">{tool.description}</p>
-    <ul className="guide-points">{tool.points.map(([label,text])=><li key={label}><strong>{label}</strong> {text}</li>)}</ul>
+    <ul className="guide-points">{tool.points.map(text=><li key={text}>{text}</li>)}</ul>
     {tool.devices&&<details className="device-reference"><summary>Seven common devices <span aria-hidden="true">+</span></summary><dl>{tool.devices.map(([name,meaning])=><div key={name}><dt>{name}</dt><dd>{meaning}</dd></div>)}</dl></details>}
     <section className="example"><h2>Example</h2>{tool.example.map(([label,text])=><div className="example-line" key={label}><h3>{label}</h3><blockquote>{text}</blockquote></div>)}<p>{tool.note}</p></section>
   </article>;
