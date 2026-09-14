@@ -27,7 +27,8 @@ export const tools = [
    note:'“Complained” makes the creaking house feel alive and uneasy.'},
   {id:'journalism',title:'The Elements of Journalism',
    description:'Journalism shares verified information about events that matter. A strong report helps readers quickly understand what happened and why it’s important.',
-   points:[['Accuracy & sourcing.','Check facts and say where information came from.'],['Clarity & fairness.','Write plainly, separate fact from opinion, and represent relevant perspectives accurately.'],['Newsworthiness.','Choose stories that are timely, relevant, or affect people.'],['Lead & structure.','Open with the essential news, then add details in order of importance.']],
+   points:[['Accuracy & sourcing.','Check facts and say where information came from.'],['Clarity & fairness.','Write plainly, separate fact from opinion, and represent relevant perspectives accurately.'],['Newsworthiness.','Choose stories that are timely, relevant, or affect people.'],['The lead.','Open with the most important news.'],['Inverted pyramid.','Put essential facts first, supporting details next, and background last.']],
    example:[['Fictional news lead','“The student council voted 12–3 on Monday to extend library hours during exam week, according to its meeting minutes.”']],
    note:'The lead gives the key facts and identifies the source.'}
 ];
+
